@@ -30,8 +30,8 @@
 
 	<p>Start with letter : <input type="text" name="lettre"> and status is : 
 	<select name="status">
-		<option value="active">Active account</option>
-		<option value="waiting">Waiting for account validation</option>
+		<option value="2">Active account</option>
+		<option value="1">Waiting for account validation</option>
 	</select>
 	<input type="submit" value="OK"></p> 
 </form>
@@ -45,12 +45,9 @@
 		} else {
 			echo 'Erreur nb de lettres';
 		}
+	
+		$status_id = $_POST['status'] ;
 		
-		if (strcmp($_POST['status'], 'active') == 0) {
-			$status_id = 2;
-		} else {
-			$status_id = 1;
-		}
 		
 		$sql = "select users.id as user_id, username, email, s.name as status from users join status s on users.status_id = s.id where username like '$start_letter%' and status_id = $status_id order by username";
 		$stmt = $pdo->query($sql);
