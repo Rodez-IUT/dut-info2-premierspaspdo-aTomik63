@@ -16,7 +16,7 @@
 	} catch (PDOException $e) {
 		 throw new PDOException($e->getMessage(), (int)$e->getCode());
 	}
-	$stmt = $pdo->query('select users.id as user_id, username, email, s.name as status from users join status s on users.status_id = s.id');
+	$stmt = $pdo->query("select users.id as user_id, username, email, s.name as status from users join status s on users.status_id = s.id where s.id = 2 and username like 'e%' order by username");
 ?>
 
 <table>
