@@ -19,6 +19,23 @@
 	$stmt = $pdo->query("select users.id as user_id, username, email, s.name as status from users join status s on users.status_id = s.id where s.id = 2 and username like 'e%' order by username");
 ?>
 
+<?php
+	$start_letter = 'e';
+	$status_id = 2 ;
+	$sql = "select users.id as user_id, username, email, s.name as status from users join status s on users.status_id = s.id where username like '$start_letter%' and status_id = $status_id order by username";
+	$stmt = $pdo->query($sql);
+?>
+
+<p> Start with letter : <input type="text" name="lettre"> and status is : 
+
+<select>
+	<option>Active account</option>
+	<option>Waiting for account validation</option>
+</select>
+
+</p> 
+
+
 <table>
     <tr>
         <th>Id</th>
