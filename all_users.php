@@ -14,27 +14,52 @@
 	try {
 		 $pdo = new PDO($dsn, $user, $pass, $options);
 	} catch (PDOException $e) {
-		 throw new PDOException($e->getMessage(), (int)$e->getCode());
+		 throw new PDOException($e->POSTMessage(), (int)$e->POSTCode());
 	}
 	$stmt = $pdo->query("select users.id as user_id, username, email, s.name as status from users join status s on users.status_id = s.id where s.id = 2 and username like 'e%' order by username");
 ?>
 
 <?php
 	$start_letter = 'e';
-	$status_id = 2 ;
+	$status_id = 2;
 	$sql = "select users.id as user_id, username, email, s.name as status from users join status s on users.status_id = s.id where username like '$start_letter%' and status_id = $status_id order by username";
 	$stmt = $pdo->query($sql);
 ?>
 
-<p> Start with letter : <input type="text" name="lettre"> and status is : 
+<form method="POST" action="all_users.php">
 
-<select>
-	<option>Active account</option>
-	<option>Waiting for account validation</option>
-</select>
+	<p>Start with letter : <input type="text" name="lettre"> and status is : 
+	<select name="status">
+		<option value="active">Active account</option>
+		<option value="waiting">Waiting for account validation</option>
+	</select>
+	<input type="submit" value="OK"></p> 
+</form>
 
-</p> 
+<?php
 
+	if (isset($_POST['status']) && isset($_POST['lettre'])) {
+		
+		if (strlen($_POST['lettre']) == 1) {
+			$start_letter = $_POST['lettre'];
+		} else {
+			echo 'Erreur nb de lettres';
+		}
+		
+		if (strcmp($_POST['status'], 'active') == 0) {
+			$status_id = 2;
+		} else {
+			$status_id = 1;
+		}
+		
+		$sql = "select users.id as user_id, username, email, s.name as status from users join status s on users.status_id = s.id where username like '$start_letter%' and status_id = $status_id order by username";
+		$stmt = $pdo->query($sql);
+		
+	} else {
+		$sql = "select users.id as user_id, username, email, s.name as status from users join status s on users.status_id = s.id order by username";
+		$stmt = $pdo->query($sql);
+	}
+?>
 
 <table>
     <tr>
