@@ -48,6 +48,7 @@
         <th>Username</th>
         <th>Email</th>
         <th>Status</th>
+		<th>Deletion</th>
     </tr>
     <?php while ($row = $stmt->fetch()) { ?>
     <tr>
@@ -55,6 +56,7 @@
         <td><?php echo $row['username']?></td>
         <td><?php echo $row['email']?></td>
         <td><?php echo $row['status']?></td>
+	
     </tr>
     <?php } ?>
 </table>
