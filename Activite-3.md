@@ -1,0 +1,1 @@
+On ne vérifie pas la lettre rentrée. On peut donc rentrer tout ce que l'on veut et c'est pour cela qu'une erreur est levée.

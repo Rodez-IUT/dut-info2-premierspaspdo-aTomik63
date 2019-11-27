@@ -16,46 +16,29 @@
 	} catch (PDOException $e) {
 		 throw new PDOException($e->POSTMessage(), (int)$e->POSTCode());
 	}
-	$stmt = $pdo->query("select users.id as user_id, username, email, s.name as status from users join status s on users.status_id = s.id where s.id = 2 and username like 'e%' order by username");
+	
+	function get($name) {
+		return isset($_GET[$name]) ? $_GET[$name] : null;
+	}
 ?>
 
-<?php
-	$start_letter = 'e';
-	$status_id = 2;
-	$sql = "select users.id as user_id, username, email, s.name as status from users join status s on users.status_id = s.id where username like '$start_letter%' and status_id = $status_id order by username";
-	$stmt = $pdo->query($sql);
-?>
-
-<form method="POST" action="all_users.php">
-
-	<p>Start with letter : <input type="text" name="lettre"> and status is : 
-	<select name="status">
-		<option value="2">Active account</option>
-		<option value="1">Waiting for account validation</option>
-	</select>
-	<input type="submit" value="OK"></p> 
+<form action="all_users.php" method="get">
+    Start with letter:
+    <input name="start_letter" type="text" value="<?php echo get("start_letter") ?>">
+    and status is:
+    <select name="status_id">
+        <option value="1" <?php if (get("status_id") == 1) echo 'selected' ?>>Waiting for account validation</option>
+        <option value="2" <?php if (get("status_id") == 2) echo 'selected' ?>>Active account</option>
+    </select>
+    <input type="submit" value="OK">
 </form>
 
 <?php
-
-	if (isset($_POST['status']) && isset($_POST['lettre'])) {
-		
-		if (strlen($_POST['lettre']) == 1) {
-			$start_letter = $_POST['lettre'];
-		} else {
-			echo 'Erreur nb de lettres';
-		}
-	
-		$status_id = $_POST['status'] ;
-		
-		
-		$sql = "select users.id as user_id, username, email, s.name as status from users join status s on users.status_id = s.id where username like '$start_letter%' and status_id = $status_id order by username";
-		$stmt = $pdo->query($sql);
-		
-	} else {
-		$sql = "select users.id as user_id, username, email, s.name as status from users join status s on users.status_id = s.id order by username";
-		$stmt = $pdo->query($sql);
-	}
+	$start_letter = htmlspecialchars(get("start_letter").'%');
+	$status_id = (int)get("status_id");
+	$sql = "select users.id as user_id, username, email, s.name as status from users join status s on users.status_id = s.id where username like :start_letter and status_id = :status_id order by username";
+	$stmt = $pdo->prepare($sql);
+	$stmt->execute(['start_letter' => $start_letter, 'status_id' => $status_id]);
 ?>
 
 <table>
